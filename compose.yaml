@@ -1,0 +1,34 @@
+services:
+  fuel-app:
+    build:
+      context: .
+      dockerfile: ./docker/fuel-app/Dockerfile
+    volumes:
+      - ./docker/fuel-app/php.ini:/usr/local/etc/php/php.ini
+      - ./fuel-app:/var/www
+    working_dir: /var/www
+    # ports:
+    #   - "8080:8080"
+    command: "php -S 0.0.0.0:8080 -t public"
+  apache-api-srv:
+    build:
+      context: .
+      dockerfile: ./docker/apache-api-srv/Dockerfile
+    volumes:
+      - ./docker/apache-api-srv/php.ini:/usr/local/etc/php/php.ini
+      - ./apache-api-srv:/var/www/html
+    working_dir: /var/www
+    ports:
+      - "8081:80"
+  nodejs-api-srv:
+    build:
+      context: .
+      dockerfile: ./docker/nodejs-api-srv/Dockerfile
+    volumes:
+      - ./nodejs-api-srv:/app
+      - /app/node_modules
+    working_dir: /app
+    # ports:
+    #   - "8082:80"
+    tty: true
+    command: "node app.js"
